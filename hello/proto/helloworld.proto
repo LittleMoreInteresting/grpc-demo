@@ -13,7 +13,6 @@ message HelloRequest {
         string mobile = 3;
         string phone = 4;
     }
-    map<int64,string> role = 5;
 }
 
 message HelloReply {
