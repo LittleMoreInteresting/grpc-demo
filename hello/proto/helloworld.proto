@@ -6,6 +6,11 @@ service Greeter {
     rpc SayHello(HelloRequest) returns (HelloReply) {};
 }
 
+enum Gender {
+    Unknown = 0;
+    Female = 1;
+    Male = 2;
+}
 message HelloRequest {
     string name = 1;
     int64 age = 2;
@@ -13,6 +18,8 @@ message HelloRequest {
         string mobile = 3;
         string phone = 4;
     }
+    map<int64,string> role = 5;
+    Gender gender = 6;
 }
 
 message HelloReply {

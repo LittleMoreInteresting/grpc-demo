@@ -7,6 +7,7 @@ import (
 
 	pb "github.com/grpc-demo/hello/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var port string
@@ -16,7 +17,7 @@ func init() {
 	flag.Parse()
 }
 func main() {
-	conn, _ := grpc.Dial(":"+port, grpc.WithInsecure())
+	conn, _ := grpc.Dial(":"+port, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	defer conn.Close()
 
 	client := pb.NewGreeterClient(conn)
