@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package interceptor;
+
+option go_package = "pb/;pb";
+
+service Speaker {
+  rpc Speak(Request) returns (Reply) {};
+}
+
+message Request {
+  string name = 1;
+  string content = 2;
+}
+
+message Reply {
+  string message = 1;
+}

@@ -5,3 +5,6 @@ package main
 
 //streaming
 //go:generate protoc -I=./streaming/pb/ --go_out=./streaming/ ./streaming/pb/streaming.proto  --go-grpc_out=./streaming/
+
+//interceptor
+//go:generate protoc -I=./interceptor/pb/ --go_out=./interceptor/ --go-grpc_out=./interceptor/ ./interceptor/pb/speaker.proto
