@@ -21,8 +21,8 @@ func (s Speaker) Speak(ctx context.Context, req *pb.Request) (*pb.Reply, error) 
 	reply := &pb.Reply{
 		Message: req.Name + " : " + req.Content,
 	}
+	time.Sleep(2 * time.Second)
 	log.Println("Speak>" + reply.Message)
-	time.Sleep(4 * time.Second)
 	return reply, nil
 }
 
@@ -32,6 +32,7 @@ func main() {
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 			interceptors.HelloInterceptor,
 			interceptors.DurationInterceptor,
+			interceptors.UnaryTimeoutInterceptor(2*time.Second),
 		)),
 	}
 	server := grpc.NewServer(opts...)
