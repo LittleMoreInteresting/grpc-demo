@@ -9,6 +9,7 @@ import (
 	pb "github.com/grpc-demo/interceptor/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 )
 
 var port string
@@ -26,7 +27,12 @@ func main() {
 	defer conn.Close()
 
 	client := pb.NewSpeakerClient(conn)
-	speak, err := client.Speak(context.Background(), &pb.Request{Name: "golang", Content: "gRPC is great"})
+	ctx := context.Background()
+	md := metadata.New(map[string]string{
+		"auth": "golang",
+	})
+	mdCtx := metadata.NewOutgoingContext(ctx, md)
+	speak, err := client.Speak(mdCtx, &pb.Request{Name: "golang", Content: "gRPC is great"})
 	if err != nil {
 		log.Fatal(err)
 		return
