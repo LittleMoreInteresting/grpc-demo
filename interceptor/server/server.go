@@ -38,8 +38,8 @@ func main() {
 	port := "9090"
 	opts := []grpc.ServerOption{
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
-			interceptors.HelloInterceptor,
-			interceptors.DurationInterceptor,
+			interceptors.HelloInterceptor(),
+			interceptors.DurationInterceptor(),
 			interceptors.UnaryTimeoutInterceptor(2*time.Second),
 		)),
 	}

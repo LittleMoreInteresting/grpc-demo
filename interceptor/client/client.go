@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"log"
+	"time"
 
 	"github.com/grpc-demo/interceptor/interceptors"
 	pb "github.com/grpc-demo/interceptor/pb"
@@ -21,7 +22,7 @@ func init() {
 func main() {
 	opt := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithUnaryInterceptor(interceptors.TimeoutInterceptor()),
+		grpc.WithUnaryInterceptor(interceptors.TimeoutInterceptor(time.Second)),
 	}
 	conn, _ := grpc.Dial(":"+port, opt...)
 	defer conn.Close()

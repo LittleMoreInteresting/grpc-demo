@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-func TimeoutInterceptor() grpc.UnaryClientInterceptor {
+func TimeoutInterceptor(timeout time.Duration) grpc.UnaryClientInterceptor {
 	return func(ctx context.Context,
 		method string,
 		req,
@@ -16,7 +16,6 @@ func TimeoutInterceptor() grpc.UnaryClientInterceptor {
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption) error {
 		if _, ok := ctx.Deadline(); !ok {
-			timeout := 3 * time.Second
 			var cancel context.CancelFunc
 			ctx, cancel = context.WithTimeout(ctx, timeout)
 			defer cancel()

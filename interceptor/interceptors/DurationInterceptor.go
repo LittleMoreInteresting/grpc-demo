@@ -14,14 +14,16 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func DurationInterceptor(ctx context.Context,
-	req interface{},
-	info *grpc.UnaryServerInfo,
-	handler grpc.UnaryHandler) (resp interface{}, err error) {
-	now := time.Now()
-	resp, err = handler(ctx, req)
-	log.Printf("Duration:%+v", time.Since(now).Microseconds())
-	return
+func DurationInterceptor() grpc.UnaryServerInterceptor {
+	return func(ctx context.Context,
+		req interface{},
+		info *grpc.UnaryServerInfo,
+		handler grpc.UnaryHandler) (resp interface{}, err error) {
+		now := time.Now()
+		resp, err = handler(ctx, req)
+		log.Printf("Duration:%+v", time.Since(now).Microseconds())
+		return
+	}
 }
 
 // go-zero 超时连接器
