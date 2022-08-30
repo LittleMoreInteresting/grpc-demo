@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-
 	discover "github.com/grpc-demo/discover/pb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.etcd.io/etcd/client/v3/naming/resolver"
@@ -19,15 +18,23 @@ func init() {
 	flag.Parse()
 }
 func main() {
-	cli, _ := clientv3.NewFromURL("http://localhost:2379")
-	etcdResolver, _ := resolver.NewBuilder(cli)
+	cli, err := clientv3.NewFromURL("http://127.0.0.1:2379")
+	etcdResolver, err := resolver.NewBuilder(cli)
+
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithResolvers(etcdResolver),
 	}
-	conn, _ := grpc.Dial(":"+port, opts...)
+	taget := "etcd:///grpc-demo/grpc/discover-demo"
+	//taget := "127.0.0.1:8000"
+	conn, err := grpc.Dial(taget, opts...)
+
+	if err != nil {
+		panic(err)
+	}
 	defer conn.Close()
 	client := discover.NewDiscoverDemoClient(conn)
-	reply, _ := client.Discover(context.Background(), &discover.Request{Name: "DDDD"})
+	reply, err := client.Discover(context.Background(), &discover.Request{Name: "DDDD"})
+	fmt.Println(err)
 	fmt.Println(reply)
 }

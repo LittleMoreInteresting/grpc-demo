@@ -2,11 +2,11 @@ package etcdv3
 
 import (
 	"fmt"
+	"go.etcd.io/etcd/client/v3/naming/endpoints"
 	"log"
 	"strings"
 	"time"
 
-	"go.etcd.io/etcd/api/v3/v3rpc/rpctypes"
 	etcd3 "go.etcd.io/etcd/client/v3"
 	"golang.org/x/net/context"
 )
@@ -20,7 +20,7 @@ var stopSignal = make(chan bool, 1)
 // Register
 func Register(name string, host string, port string, target string, interval time.Duration, ttl int) error {
 	serviceValue := fmt.Sprintf("%s:%s", host, port)
-	serviceKey = fmt.Sprintf("/%s/%s/%s", Prefix, name, serviceValue)
+	serviceKey = name
 
 	// get endpoints for register dial address
 	var err error
@@ -34,23 +34,15 @@ func Register(name string, host string, port string, target string, interval tim
 		// invoke self-register with ticker
 		ticker := time.NewTicker(interval)
 		for {
-			// minimum lease TTL is ttl-second
-			resp, _ := client.Grant(context.TODO(), int64(ttl))
-			// should get first, if not exist, set it
-			_, err := client.Get(context.Background(), serviceKey)
+
+			em, err := endpoints.NewManager(client, serviceKey)
 			if err != nil {
-				if err == rpctypes.ErrKeyNotFound {
-					if _, err := client.Put(context.TODO(), serviceKey, serviceValue, etcd3.WithLease(resp.ID)); err != nil {
-						log.Printf("grpclb: set service '%s' with ttl to etcd3 failed: %s", name, err.Error())
-					}
-				} else {
-					log.Printf("grpclb: service '%s' connect to etcd3 failed: %s", name, err.Error())
-				}
-			} else {
-				// refresh set to true for not notifying the watcher
-				if _, err := client.Put(context.Background(), serviceKey, serviceValue, etcd3.WithLease(resp.ID)); err != nil {
-					log.Printf("grpclb: refresh service '%s' with ttl to etcd3 failed: %s", name, err.Error())
-				}
+				panic(err)
+
+			}
+
+			if err = em.AddEndpoint(context.TODO(), serviceKey, endpoints.Endpoint{Addr: serviceValue}); err != nil {
+				log.Printf("grpclb: set service '%s' with ttl to etcd3 failed: %s", name, err.Error())
 			}
 			select {
 			case <-stopSignal:
