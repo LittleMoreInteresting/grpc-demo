@@ -8,3 +8,6 @@ package main
 
 //interceptor
 //go:generate protoc -I=./interceptor/pb/ --go_out=./interceptor/ --go-grpc_out=./interceptor/ ./interceptor/pb/speaker.proto
+
+//discover
+//go:generate protoc -I=./discover/pb/ --go_out=./discover/ --go-grpc_out=./discover/ ./discover/pb/discover.proto

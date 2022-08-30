@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package stream;
+option go_package = "pb/;discover";
+message Request {
+  string name = 1;
+}
+
+message Reply {
+  string content = 1;
+}
+
+service DiscoverDemo {
+  rpc Discover(Request) returns (Reply);
+}
