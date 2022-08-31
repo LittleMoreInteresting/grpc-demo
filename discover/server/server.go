@@ -4,7 +4,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
 	"net"
+	"os"
+	"os/signal"
+	"syscall"
 
 	discover "github.com/grpc-demo/discover/pb"
 	"github.com/grpc-demo/discover/register"
@@ -42,11 +46,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	//err = register.EtcdAdd(client, taget, "127.0.0.1:"+port)
-	err = register.EtcdKeepAlive(client, taget, "127.0.0.1:"+port, 15)
+	addr := "127.0.0.1:" + port
+	err = register.EtcdAdd(client, taget, "127.0.0.1:"+port)
+	//err = register.EtcdKeepAlive(client, taget, addr, 15)
 	if err != nil {
 		return
 	}
-	lis, _ := net.Listen("tcp", "127.0.0.1:"+port)
-	server.Serve(lis)
+	lis, _ := net.Listen("tcp", addr)
+	go server.Serve(lis)
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	log.Println("Shotdown Server ...")
+	_ = register.EtcdDelete(client, taget, addr)
 }

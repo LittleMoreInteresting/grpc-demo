@@ -23,7 +23,7 @@ func main() {
 	taget := "grpc-demo/grpc/discover-demo"
 
 	n := 0
-	for n < 50 {
+	for {
 		conn, err := register.EtcdDial(cli, taget)
 		if err != nil {
 			panic(err)
@@ -34,7 +34,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(reply)
+		fmt.Printf("%d: %v \n", n, reply)
 		n++
 		time.Sleep(time.Second)
 	}
