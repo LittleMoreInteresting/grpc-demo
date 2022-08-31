@@ -69,6 +69,7 @@ func EtcdDial(c *clientv3.Client, service string) (*grpc.ClientConn, error) {
 // Optionally, force delete an endpoint:
 //
 func EtcdDelete(c *clientv3.Client, service, addr string) error {
+	close(stopSignal)
 	em, _ := endpoints.NewManager(c, service)
 	return em.DeleteEndpoint(c.Ctx(), service+"/"+addr)
 }
