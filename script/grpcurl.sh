@@ -16,3 +16,5 @@ grpcurl -plaintext -d '{"name":"grpc","content":"grpc"}'  localhost:9090 interce
 # 2022/08/22 16:37:16 Hello
 # 2022/08/22 16:37:16 Speak>grpc : grpc
 # 2022/08/22 16:37:16 Bye bye
+
+grpcurl -plaintext -d '{"name":"grpc"}'  localhost:9000 stream.GatewayDemo/Gate

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package stream;
+
+option go_package = "pb/;gateway";
+import "google/api/annotations.proto";
+
+message Request {
+  string name = 1;
+}
+
+message Reply {
+  string content = 1;
+}
+
+service GatewayDemo {
+  rpc Gate(Request) returns (Reply) {
+    option (google.api.http) = {
+      get: "/v1/gate/{name}"
+    };
+  }
+}

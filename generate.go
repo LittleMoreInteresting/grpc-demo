@@ -11,3 +11,6 @@ package main
 
 //discover
 //go:generate protoc -I=./discover/pb/ --go_out=./discover/ --go-grpc_out=./discover/ ./discover/pb/discover.proto
+
+//gateway
+//go:generate protoc -I=./gateway/pb/ -I=./third_party/ --go_out=./gateway/ --go-grpc_out=./gateway/ -grpc-gateway_out=./gateway/ ./gateway/pb/gateway.proto
