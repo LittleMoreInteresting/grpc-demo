@@ -14,3 +14,6 @@ package main
 
 //gateway
 //go:generate protoc -I=./gateway/pb/ -I=./third_party/ --go_out=./gateway/ --go-grpc_out=./gateway/ -grpc-gateway_out=./gateway/ ./gateway/pb/gateway.proto
+
+//safety
+//go:generate protoc -I=./safety/pb/  --go_out=./safety/ --go-grpc_out=./safety/ ./safety/pb/safety.proto

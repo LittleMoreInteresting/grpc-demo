@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package safety;
+option go_package = "pb/;pb";
+
+message Request {
+  string name = 1;
+}
+
+message Reply {
+  string content = 1;
+}
+
+service SafetyDemo {
+  rpc Secret(Request) returns (Reply);
+}
