@@ -8,6 +8,8 @@ import (
 	pb "github.com/grpc-demo/hello/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/anypb"
 )
 
 var port string
@@ -31,6 +33,9 @@ func SayHello(client pb.GreeterClient) error {
 		Role: map[int64]string{1: "888"},
 	}
 	resp, _ := client.SayHello(context.Background(), reapy)
-	log.Printf("client.SayHello resp: %s", resp.Message)
+	a1 := resp.Details[0]
+	var res = &pb.HelloRequest{}
+	_ = anypb.UnmarshalTo(a1, res, proto.UnmarshalOptions{})
+	log.Printf("client.SayHello resp: %s ,%v", resp.Message, res.GetMobile())
 	return nil
 }

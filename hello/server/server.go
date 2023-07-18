@@ -9,6 +9,7 @@ import (
 	pb "github.com/grpc-demo/hello/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/types/known/anypb"
 )
 
 var port string
@@ -31,7 +32,11 @@ func (gs Server) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloRep
 	for k, v := range r.Role {
 		url = fmt.Sprintf("%d=%s&", k, v)
 	}
-	return &pb.HelloReply{Message: "Hello World " + r.Name + str + "?" + url}, nil
+	a, _ := anypb.New(r)
+	return &pb.HelloReply{
+		Message: "Hello World " + r.Name + str + "?" + url,
+		Details: []*anypb.Any{a},
+	}, nil
 }
 func main() {
 	server := grpc.NewServer()
