@@ -24,6 +24,6 @@ message HelloRequest {
 }
 
 message HelloReply {
-    string message = 1;
+    string message_str = 1;
     repeated google.protobuf.Any details = 2;
 }
